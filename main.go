@@ -14,6 +14,7 @@ import (
 )
 
 var (
+	listen       = ""
 	from         = ""
 	smtpUser     = ""
 	smtpPassword = ""
@@ -35,6 +36,7 @@ func main() {
 	//
 	// RequestCtx provides a lot of functionality related to http request
 	// processing. See RequestCtx docs for details.
+	listen = getenv("FORWARDFORM_LISTEN", "127.0.0.1:8000")
 	from = getenv("SMTP_FROM", "forwardemail@hanes.tech")
 	smtpUser = getenv("SMTP_USER", "forwardemail@hanes.tech")
 	smtpPassword = os.Getenv("SMTP_PASSWORD")
@@ -63,7 +65,8 @@ func main() {
 	}
 
 	// ListenAndServe returns only on error, so usually it blocks forever.
-	if err := s.ListenAndServe("127.0.0.1:8000"); err != nil {
+	log.Println("Server listening on", listen)
+	if err := s.ListenAndServe(listen); err != nil {
 		log.Fatalf("error in ListenAndServe: %s", err)
 	}
 }
